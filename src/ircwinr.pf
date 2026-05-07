@@ -1,0 +1,33 @@
+     A*---------------------------------------------------------
+     A* IRCWINR - Active IRC Windows Table
+     A*
+     A* One record per open window:
+     A*   WRSEQ=0  status window (always present while connected)
+     A*   WRSEQ>0  channel or PM window
+     A*
+     A* WRKIND: 'S'=status, 'C'=channel, 'P'=private message
+     A* WRNAME: channel name (with #) or nick for PM
+     A* WRTOPIC: channel topic (empty for PMs)
+     A* WRUNREAD: count of unread lines since last switch
+     A* WROPEN: '1'=open, '0'=closed (history kept)
+     A*
+     A* Compile:
+     A*   CRTPF FILE(IRCCLIENT/IRCWINR)
+     A*         SRCFILE(IRCCLIENT/QDDSSRC) SRCMBR(IRCWINR)
+     A*         SIZE(*NOMAX)
+     A*---------------------------------------------------------
+     A          R IRCWINRR                  TEXT('IRC Window Record')
+     A            WRSEQ          4P 0       TEXT('Window Sequence')
+     A                                      COLHDG('Seq')
+     A            WRKIND         1A         TEXT('Kind S/C/P')
+     A                                      COLHDG('K')
+     A            WRNAME        64A         TEXT('Channel or PM Nick')
+     A                                      COLHDG('Name')
+     A            WRTOPIC      256A         TEXT('Channel Topic')
+     A                                      COLHDG('Topic')
+     A            WRUNREAD       5P 0       TEXT('Unread Line Count')
+     A                                      COLHDG('Unread')
+     A            WROPEN         1A         TEXT('Open 1=Yes 0=No')
+     A                                      COLHDG('Open')
+     A                                      DFT('1')
+     A          K WRSEQ

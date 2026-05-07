@@ -1,0 +1,390 @@
+     A*---------------------------------------------------------
+     A* IRCCHATD - IRC Chat Panel Display File (Phase 7)
+     A*
+     A* Three record formats:
+     A*   CHATOUT - rows 1-23 (header + 19 chat + Fkeys)
+     A*   CHATIN  - row 24    (1-line input, INVITE)  small mode
+     A*   CHATBIG - rows 13-23 (separator + 9 input lines, INVITE)
+     A*                       big mode; OVERLAY masks chat rows
+     A*                       13-22 with the input area.
+     A*
+     A* F11 toggles between small and big mode. ENTER in big
+     A* mode concatenates BIG01..BIG09 and sends a PRIVMSG to
+     A* the current channel. F3/F12 exit. F5 refreshes.
+     A*---------------------------------------------------------
+     A                                      DSPSIZ(24 80 *DS3)
+     A                                      CA03(03 'Exit')
+     A                                      CA05(05 'Refresh')
+     A                                      CA11(68 'Toggle big')
+     A                                      CA12(12 'Cancel')
+     A          R CHATOUT
+     A                                      OVERLAY
+     A                                      FRCDTA
+     A                                  1  2'STRIRC'
+     A                                      COLOR(BLU) DSPATR(HI)
+     A                                  1 30'IRC Chat'
+     A                                      COLOR(WHT) DSPATR(HI)
+     A                                  1 62'System:'
+     A                                      COLOR(BLU)
+     A            S1SYS          8A  O  1 72
+     A                                      COLOR(WHT)
+     A                                  2  2'Window:'
+     A                                      COLOR(BLU)
+     A            S1WIN         24A  O  2 10
+     A                                      COLOR(TRQ) DSPATR(HI)
+     A                                  2 50'Nick:'
+     A                                      COLOR(BLU)
+     A            S1NCK         16A  O  2 56
+     A                                      COLOR(YLW) DSPATR(HI)
+     A                                  3  2'----------------------------------'
+     A                                      COLOR(BLU)
+     A                                  3 38'----------------------------------'
+     A                                      COLOR(BLU)
+     A* Row 01
+     A            TS01           8A  O  4  2
+     A                                      COLOR(WHT)
+     A            NK01          16A  O  4 11
+     A N11N12N13                            COLOR(WHT)
+     A  11                                  COLOR(YLW)
+     A  12                                  COLOR(GRN)
+     A  13                                  COLOR(TRQ)
+     A            MS01          52A  O  4 28
+     A                                      COLOR(WHT)
+     A* Row 02
+     A            TS02           8A  O  5  2
+     A                                      COLOR(WHT)
+     A            NK02          16A  O  5 11
+     A N14N15N16                            COLOR(WHT)
+     A  14                                  COLOR(YLW)
+     A  15                                  COLOR(GRN)
+     A  16                                  COLOR(TRQ)
+     A            MS02          52A  O  5 28
+     A                                      COLOR(WHT)
+     A* Row 03
+     A            TS03           8A  O  6  2
+     A                                      COLOR(WHT)
+     A            NK03          16A  O  6 11
+     A N17N18N19                            COLOR(WHT)
+     A  17                                  COLOR(YLW)
+     A  18                                  COLOR(GRN)
+     A  19                                  COLOR(TRQ)
+     A            MS03          52A  O  6 28
+     A                                      COLOR(WHT)
+     A* Row 04
+     A            TS04           8A  O  7  2
+     A                                      COLOR(WHT)
+     A            NK04          16A  O  7 11
+     A N20N21N22                            COLOR(WHT)
+     A  20                                  COLOR(YLW)
+     A  21                                  COLOR(GRN)
+     A  22                                  COLOR(TRQ)
+     A            MS04          52A  O  7 28
+     A                                      COLOR(WHT)
+     A* Row 05
+     A            TS05           8A  O  8  2
+     A                                      COLOR(WHT)
+     A            NK05          16A  O  8 11
+     A N23N24N25                            COLOR(WHT)
+     A  23                                  COLOR(YLW)
+     A  24                                  COLOR(GRN)
+     A  25                                  COLOR(TRQ)
+     A            MS05          52A  O  8 28
+     A                                      COLOR(WHT)
+     A* Row 06
+     A            TS06           8A  O  9  2
+     A                                      COLOR(WHT)
+     A            NK06          16A  O  9 11
+     A N26N27N28                            COLOR(WHT)
+     A  26                                  COLOR(YLW)
+     A  27                                  COLOR(GRN)
+     A  28                                  COLOR(TRQ)
+     A            MS06          52A  O  9 28
+     A                                      COLOR(WHT)
+     A* Row 07
+     A            TS07           8A  O 10  2
+     A                                      COLOR(WHT)
+     A            NK07          16A  O 10 11
+     A N29N30N31                            COLOR(WHT)
+     A  29                                  COLOR(YLW)
+     A  30                                  COLOR(GRN)
+     A  31                                  COLOR(TRQ)
+     A            MS07          52A  O 10 28
+     A                                      COLOR(WHT)
+     A* Row 08
+     A            TS08           8A  O 11  2
+     A                                      COLOR(WHT)
+     A            NK08          16A  O 11 11
+     A N32N33N34                            COLOR(WHT)
+     A  32                                  COLOR(YLW)
+     A  33                                  COLOR(GRN)
+     A  34                                  COLOR(TRQ)
+     A            MS08          52A  O 11 28
+     A                                      COLOR(WHT)
+     A* Row 09
+     A            TS09           8A  O 12  2
+     A                                      COLOR(WHT)
+     A            NK09          16A  O 12 11
+     A N35N36N37                            COLOR(WHT)
+     A  35                                  COLOR(YLW)
+     A  36                                  COLOR(GRN)
+     A  37                                  COLOR(TRQ)
+     A            MS09          52A  O 12 28
+     A                                      COLOR(WHT)
+     A* Row 10
+     A            TS10           8A  O 13  2
+     A                                      COLOR(WHT)
+     A            NK10          16A  O 13 11
+     A N38N39N40                            COLOR(WHT)
+     A  38                                  COLOR(YLW)
+     A  39                                  COLOR(GRN)
+     A  40                                  COLOR(TRQ)
+     A            MS10          52A  O 13 28
+     A                                      COLOR(WHT)
+     A* Row 11
+     A            TS11           8A  O 14  2
+     A                                      COLOR(WHT)
+     A            NK11          16A  O 14 11
+     A N41N42N43                            COLOR(WHT)
+     A  41                                  COLOR(YLW)
+     A  42                                  COLOR(GRN)
+     A  43                                  COLOR(TRQ)
+     A            MS11          52A  O 14 28
+     A                                      COLOR(WHT)
+     A* Row 12
+     A            TS12           8A  O 15  2
+     A                                      COLOR(WHT)
+     A            NK12          16A  O 15 11
+     A N44N45N46                            COLOR(WHT)
+     A  44                                  COLOR(YLW)
+     A  45                                  COLOR(GRN)
+     A  46                                  COLOR(TRQ)
+     A            MS12          52A  O 15 28
+     A                                      COLOR(WHT)
+     A* Row 13
+     A            TS13           8A  O 16  2
+     A                                      COLOR(WHT)
+     A            NK13          16A  O 16 11
+     A N47N48N49                            COLOR(WHT)
+     A  47                                  COLOR(YLW)
+     A  48                                  COLOR(GRN)
+     A  49                                  COLOR(TRQ)
+     A            MS13          52A  O 16 28
+     A                                      COLOR(WHT)
+     A* Row 14
+     A            TS14           8A  O 17  2
+     A                                      COLOR(WHT)
+     A            NK14          16A  O 17 11
+     A N50N51N52                            COLOR(WHT)
+     A  50                                  COLOR(YLW)
+     A  51                                  COLOR(GRN)
+     A  52                                  COLOR(TRQ)
+     A            MS14          52A  O 17 28
+     A                                      COLOR(WHT)
+     A* Row 15
+     A            TS15           8A  O 18  2
+     A                                      COLOR(WHT)
+     A            NK15          16A  O 18 11
+     A N53N54N55                            COLOR(WHT)
+     A  53                                  COLOR(YLW)
+     A  54                                  COLOR(GRN)
+     A  55                                  COLOR(TRQ)
+     A            MS15          52A  O 18 28
+     A                                      COLOR(WHT)
+     A* Row 16
+     A            TS16           8A  O 19  2
+     A                                      COLOR(WHT)
+     A            NK16          16A  O 19 11
+     A N56N57N58                            COLOR(WHT)
+     A  56                                  COLOR(YLW)
+     A  57                                  COLOR(GRN)
+     A  58                                  COLOR(TRQ)
+     A            MS16          52A  O 19 28
+     A                                      COLOR(WHT)
+     A* Row 17
+     A            TS17           8A  O 20  2
+     A                                      COLOR(WHT)
+     A            NK17          16A  O 20 11
+     A N59N60N61                            COLOR(WHT)
+     A  59                                  COLOR(YLW)
+     A  60                                  COLOR(GRN)
+     A  61                                  COLOR(TRQ)
+     A            MS17          52A  O 20 28
+     A                                      COLOR(WHT)
+     A* Row 18
+     A            TS18           8A  O 21  2
+     A                                      COLOR(WHT)
+     A            NK18          16A  O 21 11
+     A N62N63N64                            COLOR(WHT)
+     A  62                                  COLOR(YLW)
+     A  63                                  COLOR(GRN)
+     A  64                                  COLOR(TRQ)
+     A            MS18          52A  O 21 28
+     A                                      COLOR(WHT)
+     A* Row 19
+     A            TS19           8A  O 22  2
+     A                                      COLOR(WHT)
+     A            NK19          16A  O 22 11
+     A N65N66N67                            COLOR(WHT)
+     A  65                                  COLOR(YLW)
+     A  66                                  COLOR(GRN)
+     A  67                                  COLOR(TRQ)
+     A            MS19          52A  O 22 28
+     A                                      COLOR(WHT)
+     A                                 23  2'F3=Exit F5=Refresh F11=Big F12=End'
+     A                                      COLOR(BLU)
+     A            STSMSG        37A  O 23 43
+     A                                      COLOR(WHT)
+     A          R CHATIN
+     A                                      OVERLAY
+     A                                      INVITE
+     A                                 24  2'>'
+     A                                      COLOR(BLU) DSPATR(HI)
+     A            INPUT         76A  B 24  4
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A          R CHATBIG
+     A                                      OVERLAY
+     A                                      INVITE
+     A                                  1  2'STRIRC'
+     A                                      COLOR(BLU) DSPATR(HI)
+     A                                  1 30'IRC Chat - Big Input'
+     A                                      COLOR(WHT) DSPATR(HI)
+     A                                  1 62'System:'
+     A                                      COLOR(BLU)
+     A            B1SYS          8A  O  1 72
+     A                                      COLOR(WHT)
+     A                                  2  2'Window:'
+     A                                      COLOR(BLU)
+     A            B1WIN         24A  O  2 10
+     A                                      COLOR(TRQ) DSPATR(HI)
+     A                                  2 50'Nick:'
+     A                                      COLOR(BLU)
+     A            B1NCK         16A  O  2 56
+     A                                      COLOR(YLW) DSPATR(HI)
+     A                                  3  2'------------------------------'
+     A                                      COLOR(BLU)
+     A                                  3 33'------------------------------'
+     A                                      COLOR(BLU)
+     A* Split-view row 01
+     A            TST01          8A  O  4  2
+     A                                      COLOR(WHT)
+     A            NKT01         16A  O  4 11
+     A N70N71N72                            COLOR(WHT)
+     A  70                                  COLOR(YLW)
+     A  71                                  COLOR(GRN)
+     A  72                                  COLOR(TRQ)
+     A            MST01         52A  O  4 28
+     A                                      COLOR(WHT)
+     A* Split-view row 02
+     A            TST02          8A  O  5  2
+     A                                      COLOR(WHT)
+     A            NKT02         16A  O  5 11
+     A N73N74N75                            COLOR(WHT)
+     A  73                                  COLOR(YLW)
+     A  74                                  COLOR(GRN)
+     A  75                                  COLOR(TRQ)
+     A            MST02         52A  O  5 28
+     A                                      COLOR(WHT)
+     A* Split-view row 03
+     A            TST03          8A  O  6  2
+     A                                      COLOR(WHT)
+     A            NKT03         16A  O  6 11
+     A N76N77N78                            COLOR(WHT)
+     A  76                                  COLOR(YLW)
+     A  77                                  COLOR(GRN)
+     A  78                                  COLOR(TRQ)
+     A            MST03         52A  O  6 28
+     A                                      COLOR(WHT)
+     A* Split-view row 04
+     A            TST04          8A  O  7  2
+     A                                      COLOR(WHT)
+     A            NKT04         16A  O  7 11
+     A N79N80N81                            COLOR(WHT)
+     A  79                                  COLOR(YLW)
+     A  80                                  COLOR(GRN)
+     A  81                                  COLOR(TRQ)
+     A            MST04         52A  O  7 28
+     A                                      COLOR(WHT)
+     A* Split-view row 05
+     A            TST05          8A  O  8  2
+     A                                      COLOR(WHT)
+     A            NKT05         16A  O  8 11
+     A N82N83N84                            COLOR(WHT)
+     A  82                                  COLOR(YLW)
+     A  83                                  COLOR(GRN)
+     A  84                                  COLOR(TRQ)
+     A            MST05         52A  O  8 28
+     A                                      COLOR(WHT)
+     A* Split-view row 06
+     A            TST06          8A  O  9  2
+     A                                      COLOR(WHT)
+     A            NKT06         16A  O  9 11
+     A N85N86N87                            COLOR(WHT)
+     A  85                                  COLOR(YLW)
+     A  86                                  COLOR(GRN)
+     A  87                                  COLOR(TRQ)
+     A            MST06         52A  O  9 28
+     A                                      COLOR(WHT)
+     A* Split-view row 07
+     A            TST07          8A  O 10  2
+     A                                      COLOR(WHT)
+     A            NKT07         16A  O 10 11
+     A N88N89N90                            COLOR(WHT)
+     A  88                                  COLOR(YLW)
+     A  89                                  COLOR(GRN)
+     A  90                                  COLOR(TRQ)
+     A            MST07         52A  O 10 28
+     A                                      COLOR(WHT)
+     A* Split-view row 08
+     A            TST08          8A  O 11  2
+     A                                      COLOR(WHT)
+     A            NKT08         16A  O 11 11
+     A N91N92N93                            COLOR(WHT)
+     A  91                                  COLOR(YLW)
+     A  92                                  COLOR(GRN)
+     A  93                                  COLOR(TRQ)
+     A            MST08         52A  O 11 28
+     A                                      COLOR(WHT)
+     A* Split-view row 09
+     A            TST09          8A  O 12  2
+     A                                      COLOR(WHT)
+     A            NKT09         16A  O 12 11
+     A N94N95N96                            COLOR(WHT)
+     A  94                                  COLOR(YLW)
+     A  95                                  COLOR(GRN)
+     A  96                                  COLOR(TRQ)
+     A            MST09         52A  O 12 28
+     A                                      COLOR(WHT)
+     A                                 13  2'================================='
+     A                                      COLOR(BLU)
+     A                                 13 36'================================='
+     A                                      COLOR(BLU)
+     A            BIG01         76A  B 14  2
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A            BIG02         76A  B 15  2
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A            BIG03         76A  B 16  2
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A            BIG04         76A  B 17  2
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A            BIG05         76A  B 18  2
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A            BIG06         76A  B 19  2
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A            BIG07         76A  B 20  2
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A            BIG08         76A  B 21  2
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A            BIG09         76A  B 22  2
+     A                                      DSPATR(MDT)
+     A                                      CHECK(LC)
+     A                                 23  2'F11=Collapse ENTER=Send F3=Exit'
+     A                                      COLOR(BLU)

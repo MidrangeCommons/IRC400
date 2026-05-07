@@ -1,0 +1,30 @@
+     A*---------------------------------------------------------
+     A* IRCSRVR - Saved IRC Server List
+     A*
+     A* Stores saved IRC server connections (host, port, nick,
+     A* friendly name). Keyed by sequence/priority. Mirrors
+     A* the NTPSRVR pattern.
+     A*
+     A* Compile:
+     A*   CRTPF FILE(IRCCLIENT/IRCSRVR)
+     A*         SRCFILE(IRCCLIENT/QDDSSRC) SRCMBR(IRCSRVR)
+     A*         SIZE(*NOMAX)
+     A*---------------------------------------------------------
+     A          R IRCSRVRR                  TEXT('IRC Server Record')
+     A            ISSEQ          3P 0       TEXT('Sequence/Priority')
+     A                                      COLHDG('Seq')
+     A            ISNAME        32A         TEXT('Friendly Name')
+     A                                      COLHDG('Name')
+     A            ISHOST        64A         TEXT('Host or IP')
+     A                                      COLHDG('Host')
+     A            ISPORT         5P 0       TEXT('TCP Port')
+     A                                      COLHDG('Port')
+     A                                      DFT(6667)
+     A            ISNICK        32A         TEXT('Preferred Nick')
+     A                                      COLHDG('Nick')
+     A            ISACT          1A         TEXT('Active 1=Yes 0=No')
+     A                                      COLHDG('Act')
+     A                                      DFT('1')
+     A            ISDESC        30A         TEXT('Description')
+     A                                      COLHDG('Description')
+     A          K ISSEQ

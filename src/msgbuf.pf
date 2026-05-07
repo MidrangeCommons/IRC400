@@ -1,0 +1,34 @@
+     A*---------------------------------------------------------
+     A* MSGBUF - Circular IRC Message Buffer
+     A*
+     A* Stores parsed IRC events (PRIVMSG, NOTICE, JOIN, PART,
+     A* QUIT, system) for display by the chat panel. Keyed by
+     A* MBSEQ (monotonic). Treated as a circular buffer: when
+     A* size exceeds MAX_LINES, IRCBUFM trims oldest records.
+     A*
+     A* MBFRAGS holds the IRCFMT-encoded fragment list per
+     A* plan.md  8: \x01<color><attr><len><text> repeated.
+     A* CCSID 65535 keeps the byte stream untranslated.
+     A*
+     A* Compile:
+     A*   CRTPF FILE(IRCCLIENT/MSGBUF)
+     A*         SRCFILE(IRCCLIENT/QDDSSRC) SRCMBR(MSGBUF)
+     A*         SIZE(*NOMAX)
+     A*---------------------------------------------------------
+     A          R MSGBUFR                   TEXT('IRC Message Record')
+     A            MBSEQ          9P 0       TEXT('Line Sequence')
+     A                                      COLHDG('Seq')
+     A            MBWIN          4P 0       TEXT('Window Sequence')
+     A                                      COLHDG('Win')
+     A            MBTS           8A         TEXT('Local HH:MM:SS')
+     A                                      COLHDG('Time')
+     A            MBKIND         1A         TEXT('Kind M/N/S/A/J/P/Q/T')
+     A                                      COLHDG('K')
+     A            MBNICK        32A         TEXT('Sender Nick')
+     A                                      COLHDG('Nick')
+     A            MBNCOL         1A         TEXT('Nick Color Code')
+     A                                      COLHDG('NC')
+     A            MBFRAGS      512A         CCSID(65535)
+     A                                      TEXT('Encoded Fragments')
+     A                                      COLHDG('Fragments')
+     A          K MBSEQ
